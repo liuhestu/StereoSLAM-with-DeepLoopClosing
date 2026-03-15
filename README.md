@@ -84,7 +84,7 @@ To run the system on KITTI Stereo sequence 00:
 
 where KITTI00-02.yaml is the corresponding configuration file (including camera parameters and other parameters). It utilizes the style of ORB-SLAM2. 
 <div align="center">
-	<img src="process.png" width="60%" />
+	<img src="process.png" width="80%" />
 </div>
 
 Besides, some parameters in configuration file are for viewing:
@@ -99,7 +99,7 @@ evo_traj tum result/FrameTrajectory.txt --ref=ground_truth/True00.txt -p --plot_
 ```
 
 <div align="center">
-	<img src="trajectory.png" width="60%" />
+	<img src="trajectory.png" width="80%" />
 
 </div>
 
