@@ -1,7 +1,5 @@
 # A Simple Stereo SLAM System with Deep Loop Closing
 
-[中文传送门](https://www.cnblogs.com/MingruiYu/p/12634631.html)
-
 This is a simple stereo SLAM system with a deep-learning based loop closing module. As a beginner of SLAM, I made this system mainly in order to practice my coding and engineering skills to build a full SLAM system by myself. 
 
 I chose to build this system based on stereo cameras because it is easiler, without complicated work on initialization or dealing with the unknown scale. The structure of the system is simple and clear, in which I didn't apply much detailed optimization. Thus, the performance of this system is not outstanding. However, I hold the view that such a simple structure may be friendly for a SLAM beginner to study the body frame of a full SLAM system. It will be definitely a tough work for a beginner to study, for example,  ORB-SLAM2, a complex system with more than 10 thousand lines of code and a lot of tricks to improve its performance. 
@@ -21,7 +19,7 @@ It is truly a pleasure for me if this project can help you.
 
 ## Dependencies
 
-The platform I use is Ubuntu 18.04.
+The platform I use is Ubuntu 20.04.
 
 ### OpenCV
 
@@ -34,7 +32,7 @@ Dowload and install instructions can be found [here](https://opencv.org/releases
 to install it in Ubuntu.
 
 ### Sophus
-Dowload and install instructions can be found [here](https://github.com/strasdat/Sophus).
+Dowload and install instructions can be found [here](https://github.com/strasdat/Sophus). I am using Sophus 1.0.0.
 
 ### g2o
 Dowload and install instructions can be found [here](https://github.com/RainerKuemmerle/g2o).
@@ -48,10 +46,10 @@ NOTICE: Please make sure your caffe is installed in ~/caffe, or you need to chan
 This is the library for deep loop detection. The modified library are included in the project, so you don't need to install it by yourself.
 
 ### Pangolin
-Dowload and install instructions can be found [here](https://github.com/stevenlovegrove/Pangolin)
+Dowload and install instructions can be found [here](https://github.com/stevenlovegrove/Pangolin). I am using Pangolin 0.6, same with ORB-SLAME2.
 
 ### Others
-* C++11
+* C++17
 * Boost filesystem
 * Google Logging Library (glog)
 
@@ -61,13 +59,12 @@ TIPS: There may be some dependencies I missed. Please open an issue if you face 
 
 Clone the repository:
 ```
-git clone https://github.com/Mingrui-Yu/A-Simple-Stereo-SLAM-System-with-Deep-Loop-Closing
+git clone https://github.com/liuhestu/StereoSLAM-with-DeepLoopClosing.git
 ```
 
 Build:
 ```
-mkdir build
-cd build
+mkdir -p build && cd build
 cmake ..
 make
 ```
@@ -84,16 +81,27 @@ To run the system on KITTI Stereo sequence 00:
 ```
 ./bin/run_kitti_stereo  config/stereo/gray/KITTI00-02.yaml  PATH_TO_DATASET_FOLDER/dataset/sequences/00
 ```
+
 where KITTI00-02.yaml is the corresponding configuration file (including camera parameters and other parameters). It utilizes the style of ORB-SLAM2. 
+<div align="center">
+	<img src="process.png" width="60%" />
+</div>
 
 Besides, some parameters in configuration file are for viewing:
 * Camera.fps: control the frame rate of the system
 * LoopClosing.bShowResult: whether to show the match result and reprojection result in Loop Closing
 * Viewer.bShow: whether to show the frame and map in real time while system running
 
-Here is a result of keyframe trajectory in KITTI 00.
+Here is a result of all frame trajectory in KITTI 00.
 
-<div align=center><img src="https://img2020.cnblogs.com/blog/1921421/202004/1921421-20200404204617560-1899206987.png" width = "60%" /></div>
+```
+evo_traj tum result/FrameTrajectory.txt --ref=ground_truth/True00.txt -p --plot_mode=xz
+```
+
+<div align="center">
+	<img src="trajectory.png" width="60%" />
+
+</div>
 
 The system can run at a frame rate of around 50 frames per second (if the viewer is closed). If you don't need to undistort the images (such as in KITTI database), it can even accelerate to around 100 frames per second. (Run on a laptop with  i5-8265U(1.60GHz × 8) and no GPU)
 
