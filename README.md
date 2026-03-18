@@ -103,7 +103,7 @@ evo_traj tum result/FrameTrajectory.txt --ref=ground_truth/True00.txt -p --plot_
 
 </div>
 
-The system can run at a frame rate of around 50 frames per second (if the viewer is closed). If you don't need to undistort the images (such as in KITTI database), it can even accelerate to around 100 frames per second. (Run on a laptop with  i5-8265U(1.60GHz × 8) and no GPU)
+The system can run at a frame rate of around 100 frames per second if the viewer is closed. Run on a NUC with 13th Intel i7-1360P (2.60GHz × 16) and no GPU acceleration.
 
 # Brief Introduction
 
