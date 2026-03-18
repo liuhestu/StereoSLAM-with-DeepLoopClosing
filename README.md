@@ -4,7 +4,7 @@ This is a simple stereo SLAM system with a deep-learning based loop closing modu
 
 I chose to build this system based on stereo cameras because it is easiler, without complicated work on initialization or dealing with the unknown scale. The structure of the system is simple and clear, in which I didn't apply much detailed optimization. Thus, the performance of this system is not outstanding. However, I hold the view that such a simple structure may be friendly for a SLAM beginner to study the body frame of a full SLAM system. It will be definitely a tough work for a beginner to study, for example,  ORB-SLAM2, a complex system with more than 10 thousand lines of code and a lot of tricks to improve its performance. 
 
-It is truly a pleasure for me if this project can help you. 
+
 
 ## Related References
 
