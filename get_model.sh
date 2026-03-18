@@ -22,7 +22,9 @@ if [ ! -d "$MODEL_DIR" ]; then
 	# Copy deploy definition file to TrainAndTest/proto
 	mkdir -p ../TrainAndTest/proto
 	cp ${MODEL_DIR}/*.prototxt ../TrainAndTest/proto
-
+	
+	# delete the model directory after copying the files
+	rm -rf ../TrainAndTest/model ../TrainAndTest/proto
 else
 	echo "Model is already downloaded. Stopping."
 fi
