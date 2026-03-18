@@ -1,0 +1,103 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters (RealSense D435i / D400 series Stereo Rectified)
+#--------------------------------------------------------------------------------------------
+# 既然使用的是 image_rect_raw，说明图像已经是经过硬件极线校正的，左右目内参严格一致
+
+#camera intrinsics (From Kalibr cam0)
+Camera.left.fx: 423.85917
+Camera.left.fy: 424.48023
+Camera.left.cx: 430.65665
+Camera.left.cy: 243.61384
+
+Camera.right.fx: 423.85917
+Camera.right.fy: 424.48023
+Camera.right.cx: 430.65665
+Camera.right.cy: 243.61384
+
+# Distortion is 0 because image_rect_raw is already undistorted by RealSense SDK/Hardware
+Camera.left.k1: 0.0
+Camera.left.k2: 0.0
+Camera.left.p1: 0.0
+Camera.left.p2: 0.0
+
+Camera.right.k1: 0.0
+Camera.right.k2: 0.0
+Camera.right.p1: 0.0
+Camera.right.p2: 0.0
+
+# if you doesn't need to undistort input images, please set this as 0
+Camera.bNeedUndistortion: 0
+
+# stereo baseline times fx (bf = baseline * fx = 0.050105 m * 423.85917)
+Camera.bf: 21.2375
+
+# Camera frames per second 
+# the system will ignore this and run as fast as possible if you set this as -1
+Camera.fps: -1
+
+
+#--------------------------------------------------------------------------------------------
+# Feature Parameters
+#--------------------------------------------------------------------------------------------
+
+# valid feature numbers to decide the tracking / init status
+numFeatures.initGood: 100
+numFeatures.trackingGood: 50
+numFeatures.trackingBad: 10
+
+# ORB Extractor: Number of features when initalizing
+ORBextractor.nInitFeatures: 300
+# ORB Extractor: Number of new features to detect when needs to create a new KF
+ORBextractor.nNewFeatures: 100
+# ORB Extractor: Scale factor between levels in the scale pyramid 	
+ORBextractor.scaleFactor: 1.2
+# ORB Extractor: Number of levels in the scale pyramid	
+ORBextractor.nLevels: 8
+# ORB Extractor: Fast threshold
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+
+#--------------------------------------------------------------------------------------------
+# Map Parameters
+#--------------------------------------------------------------------------------------------
+Map.activeMap.size: 7
+
+#--------------------------------------------------------------------------------------------
+# Loop Closing Parameters
+#--------------------------------------------------------------------------------------------
+# 注意：如果你之后换成了 Seq-CALC（序列匹配 L=5），这里的得分阈值需要等比例放大 (比如 4.25)
+# 如果你现在还在用 DeepLCD 单帧匹配，保持 0.94 即可
+LCD.similarityScoreThreshold.high: 0.94
+LCD.similarityScoreThreshold.low: 0.92
+
+# if you want to see the match and reprojection result, please set this as 1
+LoopClosing.bShowResult: 1
+# the system won't do loop detection 
+#   until the number of KFs in database is more than this threshold
+LCD.nDatabaseMinSize: 50
+
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters (Modified for Indoor RealSense Scale)
+#--------------------------------------------------------------------------------------------
+
+# if you want to see the frame and trajectory in real time, please set this as 1
+Viewer.bShow: 1
+
+# some parameters for pangolin
+# 因为室内相机移动范围通常在几米到十几米，所以去掉了原版 KITTI 巨大的缩放比例
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 1
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 2
+
+# 缩小观测视角的距离，避免室内轨迹看起来只有一个点
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -20
+Viewer.ViewpointZ: -0.1
+Viewer.ViewpointF: 500
