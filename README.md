@@ -4,7 +4,7 @@ This is a simple stereo SLAM system with a deep-learning based loop closing modu
 
 I chose to build this system based on stereo cameras because it is easiler, without complicated work on initialization or dealing with the unknown scale. The structure of the system is simple and clear, in which I didn't apply much detailed optimization. Thus, the performance of this system is not outstanding. However, I hold the view that such a simple structure may be friendly for a SLAM beginner to study the body frame of a full SLAM system. It will be definitely a tough work for a beginner to study, for example,  ORB-SLAM2, a complex system with more than 10 thousand lines of code and a lot of tricks to improve its performance. 
 
-
+Construct a lightweight binocular visual SLAM system consisting of front-end odometry, back-end local mapping, and global loop closure optimization. The system integrates the high precision of traditional geometric vision (PnP + BA) and the appearance robustness of deep learning (illumination change resistance). It employs the optical flow method to improve front-end tracking efficiency and embeds the CALC self-supervised depth network to replace the traditional bag-of-words model, effectively mitigating loop closure failure under complex illumination and viewpoint variations.
 
 ## Related References
 
@@ -112,17 +112,27 @@ The system contains three thread:
 * Backend thread
 * LoopClosing thread
 
-In Frontend, it will track the motion based on feature points and LK flow. If the number of tracked keypoints is lower than a thresold, it will detect new features and create a keyframe. Mappoints are created by triangulating the matched feature points in left/right images.
+Front-end OdometryExtract uniform ORB feature points with reference to the octree strategy in ORB-SLAM, implement KLT optical flow tracking drawing on the OpenVINS front-end algorithm, and construct a Motion-only BA using g2o that only optimizes the pose of the current frame to reduce computational overhead.
 
-In Backend, it will maintain a global map and an local active map. The active map is like a sliding window, containing a fixed number of keyframes and observed mappoints. Optimization of the active map is done in Backend.
+Back-end Local OptimizationBuild a sliding window-based local map, dynamically maintain active keyframes and landmarks, and perform local bundle adjustment constrained by out-of-window keyframes. This optimizes the poses of keyframes and coordinates of feature points within the window, reducing odometry drift.
 
-In LoopClosing, it will first try to detect a Candidate Loop KF of the Current KF using DeepLCD. If succeed, it will then match the keypoints in Candidate KF and Current KF, which is used to compute the correct pose of Current KF using PnP and g2o optimization. If the number of inliers is higher than a threshold, the loop detection will be considered as a success, and loop correction is applyed: first, it will correct the keyframe poses and mappoint positions in active map; second, a pose graph optimization of the global map will be applied.
-
+Loop Detection and Global OptimizationUse the pre-trained CALC self-supervised convolutional network to extract global feature vectors from keyframe images, and quickly retrieve loop candidate frames by calculating vector cosine similarity, improving loop recall rate in environments with illumination changes.Upon loop closure triggering, ORB descriptors are recomputed and matched. RANSAC-PnP is adopted to eliminate mismatched points and solve the relative pose of the current keyframe. Finally, a global pose graph optimization is constructed with loop closure edges to perform consistent correction on historical trajectories and global map points.
 
 ***
 
 There must be some mistakes in the project as I am just a newcomer to visual SLAM. Please open an issue if you find any problem, and I will be deeply grateful for your correction and advice.
 
+## Evaluation scripts
+
+A combined evaluation script is provided at `loop_comparation/tool/metrics_and_plot.py`. It computes TP/FP/Precision/Recall/AP, saves per-method `*_scores_labels.csv`, writes a PR curve `pr_curve.png`, and writes metrics into `metrics_full.txt` or `metrics_key.txt` under the specified output directory.
+
+Example (full results):
+```bash
+python3 loop_comparation/tool/metrics_and_plot.py \
+	--results_dir /home/he/deeploop_slam/loop_comparation/full \
+	--gt /home/he/deeploop_slam/ground_truth/True00.txt \
+	--min_gap 50 --dist_thresh 3.0 --outdir /home/he/deeploop_slam/loop_comparation/full
+```
 
 
 
